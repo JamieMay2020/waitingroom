@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Waiting Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        h1 {
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: normal;
+            color: #555;
+        }
+        
+        .status {
+            font-size: 14px;
+            margin-bottom: 25px;
+            color: #666;
+        }
+        
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px 0;
+            color: #333;
+            font-family: monospace;
+        }
+        
+        .button {
+            background-color: #e8e8e8;
+            border: 1px solid #ccc;
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 2px;
+        }
+        
+        .button:hover {
+            background-color: #ddd;
+        }
+        
+        .button:disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .queue-info {
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+        
+        .waiting-message {
+            font-size: 13px;
+            color: #777;
+            margin: 20px 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Virtual Waiting Room</h1>
+        
+        <div class="status" id="status">Please select your wait time</div>
+        
+        <div class="timer" id="timer">00:00</div>
+        
+        <button class="button" onclick="startWait(30)">Wait 30 seconds</button>
+        <button class="button" onclick="startWait(60)">Wait 1 minute</button>
+        <button class="button" onclick="startWait(120)">Wait 2 minutes</button>
+        <button class="button" onclick="startWait(300)">Wait 5 minutes</button>
+        
+        <div class="waiting-message" id="message"></div>
+        
+        <div class="queue-info">
+            <p>Thank you for your patience. Your wait time is important to us.</p>
+            <p>Please remain on this page during your wait period.</p>
+        </div>
+    </div>
+    
+    <script>
+        let waitInterval;
+        let timeRemaining = 0;
+        let isWaiting = false;
+        
+        const status = document.getElementById('status');
+        const timer = document.getElementById('timer');
+        const message = document.getElementById('message');
+        const buttons = document.querySelectorAll('.button');
+        
+        const waitingMessages = [
+            "Please continue to wait...",
+            "Your patience is appreciated.",
+            "Please remain seated.",
+            "Thank you for waiting.",
+            "Processing your wait request...",
+            "Please do not refresh the page.",
+            "Your wait is in progress.",
+            "Please stand by.",
+            "Waiting in progress..."
+        ];
+        
+        function startWait(seconds) {
+            if (isWaiting) return;
+            
+            isWaiting = true;
+            timeRemaining = seconds;
+            
+            status.textContent = `Currently waiting... ${seconds} seconds remaining`;
+            
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            let messageIndex = 0;
+            message.textContent = waitingMessages[messageIndex];
+            
+            waitInterval = setInterval(() => {
+                timeRemaining--;
+                
+                const minutes = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                timer.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                status.textContent = `Currently waiting... ${timeRemaining} seconds remaining`;
+                
+                // Change message every 10 seconds
+                if (timeRemaining % 10 === 0 && timeRemaining > 0) {
+                    messageIndex = (messageIndex + 1) % waitingMessages.length;
+                    message.textContent = waitingMessages[messageIndex];
+                }
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(waitInterval);
+                    status.textContent = "Wait complete. Thank you for waiting.";
+                    timer.textContent = "00:00";
+                    message.textContent = "You may now select another wait time if desired.";
+                    
+                    buttons.forEach(button => {
+                        button.disabled = false;
+                    });
+                    
+                    isWaiting = false;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

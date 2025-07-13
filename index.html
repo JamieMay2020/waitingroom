@@ -21,7 +21,30 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
+
+        .twitter-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .twitter-link:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
         .sub-message {
         font-size: 18px;
         font-weight: 300;
@@ -166,14 +189,23 @@
             .timer-text {
                 font-size: 48px;
             }
+
+            .twitter-link {
+                top: 10px;
+                right: 10px;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
         }
         
     </style>
 </head>
 <body>
+    <a href="https://twitter.com" target="_blank" class="twitter-link">Twitter</a>
+    
     <h1 class="main-title">Waiting Room</h1>
-    <p class="sub-message">Wait here for the trenches to have some volume. Wait out Blue Coin meta</p>
-    <div class="ca-line">CA: </div>
+    <p class="sub-message">Wait here for a while</p>
+    <div class="ca-line"></div>
 
     
     <div class="content-section">
